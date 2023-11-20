@@ -5,28 +5,31 @@
 
 
 
+
 using namespace std;
 
 int main() {
-    vector<string> msg{"hello", "world", "c++"};
+    vector<string> msg{"hello", "world"};
 
     for (const string &word : msg) {
         cout << word << " ";
     }
 
     Chess* game = new Chess(5);
-    int number = (*game).getNumber();
-    string word = game->getWord();
+    int number = (*game).roundNumber();
+    bool yes = (*game).isWhitesTurn();
 
     
 
 
-    cout << "The word is: " << word << ". The number is: " << number << endl;
+    cout << "Is it whites turn? " << yes << ". The number is: " << number << endl;
 
+    int x;
 
-
-
-
-
-    cout << endl;
+    cout << "Type a number";
+    cin >> x;
+    cout << "Your number is: " << x;
+    cout << endl << "test";
+    
+    return 0;
 }

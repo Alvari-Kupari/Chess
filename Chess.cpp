@@ -5,20 +5,20 @@ using namespace std;
 class Chess {
     private :
 
-    int a;
-    string word;
+    int round;
 
     public : 
     Chess(int number) {
-        a = number;
-        word = "hi";
+        round = number;
     }
 
-    string getWord() {
-      return word;  
+    public :
+
+    bool isWhitesTurn() {
+      return round % 2 == 0;  
     }
 
-    int getNumber() {
-        return a;
+    int roundNumber() {
+        return round;
     }
 };
