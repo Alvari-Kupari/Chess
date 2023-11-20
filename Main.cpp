@@ -15,9 +15,9 @@ int main() {
         cout << word << " ";
     }
 
-    Chess* game = new Chess(5);
-    int number = (*game).roundNumber();
-    bool yes = (*game).isWhitesTurn();
+    Chess game(5);
+    int number = game.roundNumber();
+    bool yes = game.isWhitesTurn();
 
     
 
