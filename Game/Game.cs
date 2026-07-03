@@ -1,5 +1,6 @@
 namespace Chess.Game;
 
+using System.Diagnostics;
 using Chess.Board;
 using Chess.Pieces;
 
@@ -31,6 +32,13 @@ class ChessGame
                 GameInputOutput.PrintMessage("Invalid starting square. Try again.\n");
                 continue;
             }
+
+            var source = board[from.Value];
+            if (source is not null && source.Colour != turn)
+            {
+                GameInputOutput.PrintMessage("Piece is the wrong colour for the turn.");
+                continue;
+            }
             var to = GameInputOutput.GetUserInput("Enter destination square: \n");
             if (to is null)
             {
@@ -40,7 +48,7 @@ class ChessGame
             try
             {
                 board.MovePiece(from.Value, to.Value);
-                this.turn = turn == Colour.BLACK ? Colour.WHITE : Colour.BLACK;
+                turn = turn == Colour.BLACK ? Colour.WHITE : Colour.BLACK;
             } catch (Exception e)
             {
                 GameInputOutput.PrintMessage(e.Message);

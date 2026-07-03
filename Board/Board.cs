@@ -20,11 +20,13 @@ public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<ChessPi
 
         if (!possibleMoves.Contains(to))
         {
-            throw new InvalidOperationException("This peice can't make this move.");
+            throw new InvalidOperationException("This piece can't make this move.");
         }
 
-        board[to.Item1, to.Item2] = sourcePiece;
-        board[from.Item1, from.Item2] = null;
+        this[to] = sourcePiece;
+        this[from] = null;
+        sourcePiece.OnMove(from, to, this);
+        Console.WriteLine($"LOG: moving piece ({sourcePiece.Colour} {sourcePiece.GetType().Name}) from ({from.Item1}, {from.Item2}) to ({to.Item1}, {to.Item2})");
     }
 
     public ChessPiece? this[(int, int) coord]
@@ -34,7 +36,7 @@ public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<ChessPi
     }
 
     public bool IsOccupied((int, int) coord) {
-        return board[coord.Item1, coord.Item2] is not null;
+        return this[coord] is not null;
     }
 
 

@@ -43,9 +43,18 @@ public abstract class ChessPiece(Colour Colour)
         return moves;
 
     }
-
+    /// <summary>
+    /// Gives information to the piece as needed. This is useful for the rook and pawn and king, for castling and en-paissant mechanics.
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="board"></param>
+    public virtual void OnMove((int, int) from, (int, int) to, ChessBoard board)
+    {
+    }
 
     public abstract ISet<(int, int)> GetPossibleMoves((int, int) source, ChessBoard board); 
+
 
     public char Symbol => Colour == Colour.BLACK ? BlackSymbol : WhiteSymbol;
 }
