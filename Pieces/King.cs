@@ -2,7 +2,7 @@ using Chess.Board;
 
 namespace Chess.Pieces;
 
-class King(Colour colour) : ChessPiece(colour)
+public class King(Colour colour) : ChessPiece(colour)
 {
     protected override char WhiteSymbol => '♔';
 

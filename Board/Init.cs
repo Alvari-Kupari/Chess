@@ -2,10 +2,13 @@ using Chess.Pieces;
 
 namespace Chess.Board;
 
-class ChessBoardInitializer
+public class ChessBoardInitializer
 {
     private const int BOARD_SIZE = 8;
-    public static ChessPiece?[,] InitBoard()
+    public King WhiteKing {get;} = new(Colour.WHITE);
+    public King BlackKing {get;} = new(Colour.BLACK);
+
+    public ChessPiece?[,] InitBoard()
     {
         ChessPiece?[,] board = new ChessPiece?[BOARD_SIZE, BOARD_SIZE];
 
@@ -27,8 +30,8 @@ class ChessBoardInitializer
         board[0, 3] = new Queen(Colour.BLACK);
         board[7, 3] = new Queen(Colour.WHITE);
 
-        board[0, 4] = new King(Colour.BLACK);
-        board[7, 4] = new King(Colour.WHITE);
+        board[0, 4] = BlackKing;
+        board[7, 4] = WhiteKing;
 
         board[0, 5] = new Bishop(Colour.BLACK);
         board[7, 5] = new Bishop(Colour.WHITE);

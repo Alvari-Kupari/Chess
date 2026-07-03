@@ -1,5 +1,4 @@
-using Chess.Board;
+using Chess.Game;
 
-ChessBoard board = new();
-
-Console.Write(board.ToString());
+ChessGame game = new();
+game.Run();
