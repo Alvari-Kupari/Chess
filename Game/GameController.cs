@@ -1,10 +1,9 @@
 namespace Chess.Game;
 
-using System.Diagnostics;
 using Chess.Board;
 using Chess.Pieces;
 
-class ChessGame
+class GameController
 {
     private Colour turn;
     private readonly ChessBoard board;
@@ -12,7 +11,7 @@ class ChessGame
     private readonly Referee checkReferee;
     private readonly Mover pieceMover;
 
-    public ChessGame()
+    public GameController()
     {
         turn = Colour.WHITE;
         board = new(initializer);
@@ -60,11 +59,6 @@ class ChessGame
         }
 
         GameInputOutput.PrintMessage("Game over!");
-    }
-
-    public void HandleTurn()
-    {
-        
     }
 
 }

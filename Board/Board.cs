@@ -8,26 +8,6 @@ public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<ChessPi
 {
     private readonly ChessPiece?[,] board = initializer.InitBoard();
 
-    public void MovePiece((int, int) from, (int, int) to)
-    {
-        if (IsOutsideBounds(from))
-        {
-            throw new InvalidOperationException("Out of bounds coordinate given");
-        }
-        var sourcePiece = board[from.Item1, from.Item2] ?? throw new InvalidOperationException("No piece at the source position.");
-
-        var possibleMoves = sourcePiece.GetPossibleMoves(from, this);
-
-        if (!possibleMoves.Contains(to))
-        {
-            throw new InvalidOperationException("This piece can't make this move.");
-        }
-
-        this[to] = sourcePiece;
-        this[from] = null;
-        sourcePiece.OnMove(from, to, this);
-        Console.WriteLine($"LOG: moving piece ({sourcePiece.Colour} {sourcePiece.GetType().Name}) from ({from.Item1}, {from.Item2}) to ({to.Item1}, {to.Item2})");
-    }
 
     public ChessPiece? this[(int, int) coord]
     {
