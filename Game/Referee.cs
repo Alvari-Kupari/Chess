@@ -1,6 +1,7 @@
 namespace Chess.Game;
 
 using Chess.Board;
+using Chess.Move;
 using Chess.Pieces;
 
 public class Referee(ChessBoard board, King WhiteKing, King BlackKing)
@@ -27,7 +28,7 @@ public class Referee(ChessBoard board, King WhiteKing, King BlackKing)
         return false;
     }
 
-    private (King, (int, int)) GetCurrentKing(Colour turn) {
+    private (King, Coordinate) GetCurrentKing(Colour turn) {
         var king = turn == Colour.WHITE ? WhiteKing : BlackKing;
         return (king, board.FindPiece(king) ?? throw new InvalidProgramException("There should be a king on the board."));
     }

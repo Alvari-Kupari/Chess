@@ -1,4 +1,5 @@
 using Chess.Board;
+using Chess.Move;
 
 namespace Chess.Pieces;
 
@@ -9,16 +10,16 @@ class Pawn(Colour colour) : ChessPiece(colour)
     protected override char BlackSymbol => '♟';
     private bool hasMoved = false;
 
-    public override ISet<(int, int)> GetPossibleMoves((int, int) source, ChessBoard board)
+    public override ISet<Coordinate> GetPossibleMoves(Coordinate source, ChessBoard board)
     {
-        var moves = new HashSet<(int, int)>();
-        int attackDirection = Colour == Colour.BLACK ? 1 : -1;
-        var forwardSquare = (source.Item1 + attackDirection, source.Item2);
+        var moves = new HashSet<Coordinate>();
+        Coordinate attackDirection = Colour == Colour.BLACK ? new Coordinate(1, 0) : new Coordinate(-1, 0);
+        var forwardSquare = source + attackDirection;
 
         if (!board.IsOutsideBounds(forwardSquare) && !board.IsOccupied(forwardSquare))
         {
             moves.Add(forwardSquare);
-            var forwardTwoSquare = (source.Item1 + 2*attackDirection, source.Item2);
+            var forwardTwoSquare = source + attackDirection * 2;
 
             if (!board.IsOutsideBounds(forwardTwoSquare) && !hasMoved && !board.IsOccupied(forwardTwoSquare))
             {
@@ -26,8 +27,8 @@ class Pawn(Colour colour) : ChessPiece(colour)
             }
         }
 
-        var leftDiagonal = (forwardSquare.Item1, forwardSquare.Item2 - 1);
-        var rightDiagonal = (forwardSquare.Item1, forwardSquare.Item2 + 1);
+        var leftDiagonal = new Coordinate(forwardSquare.X, forwardSquare.Y - 1);
+        var rightDiagonal = new Coordinate(forwardSquare.X, forwardSquare.Y + 1);
 
         if (!board.IsOutsideBounds(leftDiagonal) && IsEnemy(leftDiagonal, board)) {
             moves.Add(leftDiagonal);
@@ -42,7 +43,7 @@ class Pawn(Colour colour) : ChessPiece(colour)
         return moves;
     }
 
-    public override void OnMove((int, int) from, (int, int) to, ChessBoard board)
+    public override void OnMove(Coordinate from, Coordinate to, ChessBoard board)
     {
         hasMoved = true;
     }

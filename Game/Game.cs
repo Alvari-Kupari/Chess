@@ -1,70 +1,60 @@
 namespace Chess.Game;
 
-using System.Diagnostics;
 using Chess.Board;
+using Chess.Move;
 using Chess.Pieces;
 
 class ChessGame
 {
-    private Colour turn;
-    private readonly ChessBoard board;
+    public Colour Turn {get; private set;}
+    public ChessBoard Board {get;}
     private readonly ChessBoardInitializer initializer = new();
-    private readonly Referee checkReferee;
-    private readonly Mover pieceMover;
+    private readonly Referee referee;
 
     public ChessGame()
     {
-        turn = Colour.WHITE;
-        board = new(initializer);
-        checkReferee = new(board, initializer.WhiteKing, initializer.BlackKing);
-        pieceMover = new(board);
+        Turn = Colour.WHITE;
+        Board = new(initializer);
+        referee = new(Board, initializer.WhiteKing, initializer.BlackKing);
     }
 
-    public void Play()
+    public ChessMessages HandleTurn(Coordinate from, Coordinate to)
     {
-        while(!checkReferee.IsCheckMate(turn))
-        {
-            if (checkReferee.IsCheck(turn))
-            {
-                GameInputOutput.PrintMessage("Check!\n");
-            }
-            Console.WriteLine(board.ToString());
-            GameInputOutput.PrintMessage($"{(turn == Colour.WHITE ? "Whites " : "Blacks")} turn:\n");
-            var from = GameInputOutput.GetUserInput("Enter starting square: \n");
-            if (from is null)
-            {
-                GameInputOutput.PrintMessage("Invalid starting square. Try again.\n");
-                continue;
-            }
+        ChessMessages messages = new();
 
-            var source = board[from.Value];
-            if (source is not null && source.Colour != turn)
-            {
-                GameInputOutput.PrintMessage("Piece is the wrong colour for the turn.");
-                continue;
-            }
-            var to = GameInputOutput.GetUserInput("Enter destination square: \n");
-            if (to is null)
-            {
-                GameInputOutput.PrintMessage("Invalid destination square. Try again.\n");
-                continue;
-            }
-            try
-            {
-                pieceMover.MovePiece(from.Value, to.Value);
-                turn = turn == Colour.BLACK ? Colour.WHITE : Colour.BLACK;
-            } catch (Exception e)
-            {
-                GameInputOutput.PrintMessage(e.Message);
-            }
+        if (Board.IsOutsideBounds(from) || Board.IsOutsideBounds(to))
+        {
+            return messages.Append(ChessMessage.ERROR_OUT_OF_BOUNDS);
         }
 
-        GameInputOutput.PrintMessage("Game over!");
-    }
+        var sourcePiece = Board[from];
+        if (sourcePiece is null) return messages.Append(ChessMessage.ERROR_SOURCE_IS_EMPTY);
+        if (sourcePiece.Colour == Colour.WHITE && Turn == Colour.BLACK)
+        {
+            return messages.Append(ChessMessage.ERROR_BLACK_CANT_MOVE_A_WHITE_PIECE);
+        }
+        if (sourcePiece.Colour == Colour.BLACK && Turn == Colour.WHITE)
+        {
+            return messages.Append(ChessMessage.ERROR_WHITE_CANT_MOVE_A_BLACK_PIECE);
+        }
+        var possibleMoves = sourcePiece.GetPossibleMoves(from, Board);
 
-    public void HandleTurn()
-    {
-        
+        if (!possibleMoves.Contains(to)) return messages.Append(ChessMessage.ERROR_INVALID_MOVE);
+
+        Board[to] = sourcePiece;
+        Board[from] = null;
+        sourcePiece.OnMove(from, to, Board);
+
+        Turn = Turn == Colour.BLACK ? Colour.WHITE : Colour.BLACK;
+
+        if (referee.IsCheckMate(Colour.BLACK)) return messages.Append(ChessMessage.CHECKMATE_BLACK);
+        if (referee.IsCheckMate(Colour.WHITE)) return messages.Append(ChessMessage.CHECKMATE_WHITE);
+
+        if (referee.IsCheck(Colour.BLACK)) return messages.Append(ChessMessage.CHECK_BLACK);
+        if (referee.IsCheck(Colour.WHITE)) return messages.Append(ChessMessage.CHECK_WHITE);
+
+
+        return messages;
     }
 
 }

@@ -1,4 +1,5 @@
 using Chess.Board;
+using Chess.Move;
 
 namespace Chess.Pieces;
 
@@ -8,23 +9,23 @@ public class King(Colour colour) : ChessPiece(colour)
 
     protected override char BlackSymbol => '♚';
 
-    public override ISet<(int, int)> GetPossibleMoves((int, int) source, ChessBoard board)
+    public override ISet<Coordinate> GetPossibleMoves(Coordinate source, ChessBoard board)
     {
         return GetMovesInDirection(
             start: source,
             board,
             directions: [
                 // linear
-                ((0, 1), 1),
-                ((0, -1), 1),
-                ((-1, 0), 1),
-                ((1, 0), 1),
+                (new Coordinate(0, 1), 1),
+                (new Coordinate(0, -1), 1),
+                (new Coordinate(-1, 0), 1),
+                (new Coordinate(1, 0), 1),
 
                 // diagonal
-                ((1, 1), 1),
-                ((1, -1), 1),
-                ((-1, 1), 1),
-                ((-1, -1), 1),
+                (new Coordinate(1, 1), 1),
+                (new Coordinate(1, -1), 1),
+                (new Coordinate(-1, 1), 1),
+                (new Coordinate(-1, -1), 1),
             ]
         );
     }

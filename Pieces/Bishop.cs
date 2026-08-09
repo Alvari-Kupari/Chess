@@ -1,4 +1,5 @@
 using Chess.Board;
+using Chess.Move;
 
 namespace Chess.Pieces;
 
@@ -7,17 +8,17 @@ class Bishop(Colour colour) : ChessPiece(colour)
     protected override char WhiteSymbol => '♗';
     protected override char BlackSymbol => '♝';
 
-    public override ISet<(int, int)> GetPossibleMoves((int, int) source, ChessBoard board)
+    public override ISet<Coordinate> GetPossibleMoves(Coordinate source, ChessBoard board)
     {
         return GetMovesInDirection(
             start: source,
             board,
             directions: [
                 // diagonal
-                ((1, 1), int.MaxValue),
-                ((1, -1), int.MaxValue),
-                ((-1, 1), int.MaxValue),
-                ((-1, -1), int.MaxValue),
+                (new Coordinate(1, 1), int.MaxValue),
+                (new Coordinate(1, -1), int.MaxValue),
+                (new Coordinate(-1, 1), int.MaxValue),
+                (new Coordinate(-1, -1), int.MaxValue),
             ]
         );
     }

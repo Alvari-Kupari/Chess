@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Text;
+using Chess.Move;
 using Chess.Pieces;
 
 namespace Chess.Board;
@@ -9,33 +10,33 @@ public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<ChessPi
     private readonly ChessPiece?[,] board = initializer.InitBoard();
 
 
-    public ChessPiece? this[(int, int) coord]
+    public ChessPiece? this[Coordinate coord]
     {
-        get => board[coord.Item1, coord.Item2];
-        set => board[coord.Item1, coord.Item2] = value;
+        get => board[coord.X, coord.Y];
+        set => board[coord.X, coord.Y] = value;
     }
 
-    public bool IsOccupied((int, int) coord) {
+    public bool IsOccupied(Coordinate coord) {
         return this[coord] is not null;
     }
 
-
-    public bool IsOutsideBounds((int, int) coord)
+    public bool IsOutsideBounds(Coordinate coord)
     {
-        return coord.Item1 < 0 
-            || coord.Item1 >= board.GetLength(0) 
-            || coord.Item2 < 0 
-            || coord.Item2 >= board.GetLength(1);
+        var (x, y) = coord;
+        return x < 0 
+            || x >= board.GetLength(0) 
+            || y < 0 
+            || y >= board.GetLength(1);
     }
 
-    public (int, int)? FindPiece(ChessPiece needle) {
+    public Coordinate? FindPiece(ChessPiece needle) {
         for (int i = 0; i < board.GetLength(0); i++)
         {
             for (int j = 0; j < board.GetLength(1); j++)
             {
                 var piece = board[i, j];
                 if (piece == needle) {
-                    return (i, j);
+                    return new Coordinate(i, j);
                 }
 
             }

@@ -1,34 +1,27 @@
 namespace Chess.Game;
 
-using Chess.Board;
 using Chess.Pieces;
 
 class GameController
 {
-    private Colour turn;
-    private readonly ChessBoard board;
-    private readonly ChessBoardInitializer initializer = new();
-    private readonly Referee checkReferee;
-    private readonly Mover pieceMover;
-
+    private readonly ChessGame game;
     public GameController()
     {
-        turn = Colour.WHITE;
-        board = new(initializer);
-        checkReferee = new(board, initializer.WhiteKing, initializer.BlackKing);
-        pieceMover = new(board);
+        game = new();
     }
 
     public void Play()
     {
-        while(!checkReferee.IsCheckMate(turn))
+        ChessMessages messages = new();
+
+        while(!messages.IsCheckMate())
         {
-            if (checkReferee.IsCheck(turn))
+            if (messages.IsCheck())
             {
                 GameInputOutput.PrintMessage("Check!\n");
             }
-            Console.WriteLine(board.ToString());
-            GameInputOutput.PrintMessage($"{(turn == Colour.WHITE ? "Whites " : "Blacks")} turn:\n");
+            Console.WriteLine(game.Board.ToString());
+            GameInputOutput.PrintMessage($"{(game.Turn == Colour.WHITE ? "Whites " : "Blacks")} turn:\n");
             var from = GameInputOutput.GetUserInput("Enter starting square: \n");
             if (from is null)
             {
@@ -36,26 +29,14 @@ class GameController
                 continue;
             }
 
-            var source = board[from.Value];
-            if (source is not null && source.Colour != turn)
-            {
-                GameInputOutput.PrintMessage("Piece is the wrong colour for the turn.");
-                continue;
-            }
+
             var to = GameInputOutput.GetUserInput("Enter destination square: \n");
             if (to is null)
             {
                 GameInputOutput.PrintMessage("Invalid destination square. Try again.\n");
                 continue;
             }
-            try
-            {
-                pieceMover.MovePiece(from.Value, to.Value);
-                turn = turn == Colour.BLACK ? Colour.WHITE : Colour.BLACK;
-            } catch (Exception e)
-            {
-                GameInputOutput.PrintMessage(e.Message);
-            }
+            messages = game.HandleTurn(from, to);
         }
 
         GameInputOutput.PrintMessage("Game over!");

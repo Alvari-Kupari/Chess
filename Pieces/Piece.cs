@@ -1,4 +1,5 @@
 using Chess.Board;
+using Chess.Move;
 
 namespace Chess.Pieces;
 
@@ -8,22 +9,22 @@ public abstract class ChessPiece(Colour Colour)
     protected abstract char WhiteSymbol {get;}
     protected abstract char BlackSymbol {get;}
     
-    protected bool IsEnemy((int, int) coord, ChessBoard board)
+    protected bool IsEnemy(Coordinate coord, ChessBoard board)
     {
         return board[coord]?.Colour != Colour;
     }
 
-    protected ISet<(int, int)> GetMovesInDirection(
-        (int, int) start, 
+    protected ISet<Coordinate> GetMovesInDirection(
+        Coordinate start, 
         ChessBoard board,
-        params ((int, int), int)[] directions)
+        params (Coordinate, int)[] directions)
     {
-        var moves = new HashSet<(int, int)>();
+        var moves = new HashSet<Coordinate>();
 
-        foreach (var ((dx, dy), maxIterations) in directions)
+        foreach (var (dxy, maxIterations) in directions)
         {
             int i = 0;
-            var coord = (start.Item1 + dx, start.Item2 + dy);
+            var coord = start + dxy;
             while (i < maxIterations && !board.IsOutsideBounds(coord))
             {
                 if (board.IsOccupied(coord))
@@ -35,7 +36,7 @@ public abstract class ChessPiece(Colour Colour)
                     break;
                 }
                 moves.Add(coord);
-                coord = (coord.Item1 + dx, coord.Item2 + dy);
+                coord += dxy;
                 i++;
             }
         }
@@ -49,11 +50,11 @@ public abstract class ChessPiece(Colour Colour)
     /// <param name="from"></param>
     /// <param name="to"></param>
     /// <param name="board"></param>
-    public virtual void OnMove((int, int) from, (int, int) to, ChessBoard board)
+    public virtual void OnMove(Coordinate from, Coordinate to, ChessBoard board)
     {
     }
 
-    public abstract ISet<(int, int)> GetPossibleMoves((int, int) source, ChessBoard board); 
+    public abstract ISet<Coordinate> GetPossibleMoves(Coordinate source, ChessBoard board); 
 
 
     public char Symbol => Colour == Colour.BLACK ? BlackSymbol : WhiteSymbol;

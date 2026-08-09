@@ -1,8 +1,10 @@
+using Chess.Move;
+
 namespace Chess.Game;
 
 public class GameInputOutput
 {
-    public static (int, int)? GetUserInput(string? message = null)
+    public static Coordinate? GetUserInput(string? message = null)
     {
         PrintMessage(message);
         var input = Console.ReadLine();
@@ -17,7 +19,7 @@ public class GameInputOutput
         Console.WriteLine(message);
     }
 
-    private static (int, int)? ParseCoordinate(string input)
+    private static Coordinate? ParseCoordinate(string input)
     {
         if (input.Trim().IsWhiteSpace())
         {
@@ -32,7 +34,7 @@ public class GameInputOutput
             return null;
         }
 
-        return (x, y);
+        return new Coordinate(x, y);
     }
 
 
