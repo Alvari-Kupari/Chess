@@ -1,14 +1,16 @@
 using System.Collections;
+using System.ComponentModel;
+using System.IO.Pipes;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using Chess.Move;
 using Chess.Pieces;
 
 namespace Chess.Board;
 
-public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<ChessPiece>
+public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<(ChessPiece, Coordinate)>
 {
     private readonly ChessPiece?[,] board = initializer.InitBoard();
-
 
     public ChessPiece? this[Coordinate coord]
     {
@@ -29,19 +31,25 @@ public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<ChessPi
             || y >= board.GetLength(1);
     }
 
-    public Coordinate? FindPiece(ChessPiece needle) {
-        for (int i = 0; i < board.GetLength(0); i++)
-        {
-            for (int j = 0; j < board.GetLength(1); j++)
-            {
-                var piece = board[i, j];
-                if (piece == needle) {
-                    return new Coordinate(i, j);
-                }
+    public int GetBoundary(int axis)
+    {
+        return board.GetLength(axis);
+    }
 
-            }
-        }
-        return null;
+    public Coordinate? FindPiece(ChessPiece needle) 
+    {
+        var (piece, location) = this.FirstOrDefault(x => x.Item1 == needle);
+        return piece is null ? null : location;
+    }
+
+    public T? FindPiece<T>(Colour? side = null) where T : ChessPiece
+    {
+        return board.OfType<T>().FirstOrDefault(piece => side is null || piece.Colour == side);
+    }
+
+    public ISet<T> FindPieces<T>(Colour? side = null) where T : ChessPiece
+    {
+        return board.OfType<T>().Where(piece => side is null || piece.Colour == side).ToHashSet();
     }
 
     public override string ToString()
@@ -62,11 +70,16 @@ public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<ChessPi
         return sb.ToString();
     }
 
-    public IEnumerator<ChessPiece> GetEnumerator()
+    public IEnumerator<(ChessPiece, Coordinate)> GetEnumerator()
     {
-        foreach(var piece in board) {
-            if (piece is null) continue;
-            yield return piece;
+        for (int row = 0; row < board.GetLength(0); row++)
+        {
+            for (int col = 0; col < board.GetLength(1); col++)
+            {
+                var piece = board[row, col];
+                if (piece is null) continue;
+                yield return (piece, new Coordinate(row, col));
+            }
         }
     }
 

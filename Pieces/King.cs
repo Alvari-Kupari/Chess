@@ -5,6 +5,7 @@ namespace Chess.Pieces;
 
 public class King(Colour colour) : ChessPiece(colour)
 {
+    public bool HasMoved {get; set;}
     protected override char WhiteSymbol => '♔';
 
     protected override char BlackSymbol => '♚';
@@ -29,4 +30,10 @@ public class King(Colour colour) : ChessPiece(colour)
             ]
         );
     }
+
+    public override void OnMove(Coordinate from, Coordinate to, ChessBoard board)
+    {
+        HasMoved = true;
+    }
+
 }

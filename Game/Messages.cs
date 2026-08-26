@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Chess.Game;
 
 public class ChessMessages
@@ -39,16 +36,16 @@ public class ChessMessages
 
     public bool IsCheckMate()
     {
-        return messages.Any(msg => msg.IsCheckMate());
+        return messages.Contains(ChessMessage.CHECKMATE);
     }
 
     public bool IsCheck()
     {
-        return messages.Any(msg => msg.IsCheck());
+        return messages.Contains(ChessMessage.CHECK);
     }
 
     public override string ToString()
     {
-        return messages.Any() ? string.Join(", ", messages.Select(message => message.ToString())) : "(no messages)";
+        return messages.Count > 0 ? string.Join(", ", messages.Select(message => message.ToString())) : "(no messages)";
     }
 }
