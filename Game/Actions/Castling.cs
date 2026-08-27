@@ -1,6 +1,5 @@
 using Chess.Board;
-using Chess.Game.Mechanics.Castling;
-using Chess.Move;
+using Chess.Game.Mechanics;
 using Chess.Pieces;
 
 namespace Chess.Game.Actions;
@@ -9,7 +8,7 @@ public class CastlingAction(Colour side, bool queenside) : IAction
 {
     private static readonly int KING_X = 3;
 
-    public void Execute(ChessBoard board, Colour turn)
+    public TurnResult Execute(ChessBoard board, Colour turn)
     {
         Coordinate expectedKingLocation = new(
             X: KING_X,
@@ -18,8 +17,7 @@ public class CastlingAction(Colour side, bool queenside) : IAction
 
         if (board[expectedKingLocation] is not King king || king.Colour != side || king.HasMoved)
         {
-            // handle
-            return;
+            return TurnResult.INVALID_MOVE;
         }
         
         Coordinate expectedRookLocation = new(
@@ -30,7 +28,7 @@ public class CastlingAction(Colour side, bool queenside) : IAction
         if (board[expectedRookLocation] is not Rook rook || rook.HasMoved || rook.Colour != side)
         {
             // handle
-            return;
+            return TurnResult.INVALID_MOVE;
         }
 
         CastlingPath path = new(expectedKingLocation, expectedRookLocation);
@@ -42,13 +40,13 @@ public class CastlingAction(Colour side, bool queenside) : IAction
         if (path.GetRequiredEmptySquares().Any(board.IsOccupied))
         {
             // TODO handle
-            return;
+            return TurnResult.INVALID_MOVE;
         }
 
         if (path.GetKingsPath().Any(enemyCoveredSquares.Contains))
         {
             // handle
-            return;
+            return TurnResult.INVALID_MOVE;
         }
 
         // Do the castle
@@ -61,5 +59,6 @@ public class CastlingAction(Colour side, bool queenside) : IAction
         king.HasMoved = true;
         rook.HasMoved = true;
 
+        return DetermineStatus.DetermineTurnResult(board, coveredSquares, turn);
     }
 }

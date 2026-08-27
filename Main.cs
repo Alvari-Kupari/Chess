@@ -7,8 +7,8 @@ var failures = 0;
 failures += RunTest(
     "empty source square",
     game => game.HandleTurn(new Coordinate(5, 0), new Coordinate(4, 0)),
-    (game, messages) => messages.Contains(ChessMessage.ERROR_SOURCE_IS_EMPTY),
-    expectedMessages: [ChessMessage.ERROR_SOURCE_IS_EMPTY]);
+    (game, messages) => messages.Contains(TurnResult.ERROR_SOURCE_IS_EMPTY),
+    expectedMessages: [TurnResult.ERROR_SOURCE_IS_EMPTY]);
 
 failures += RunTest(
     "white pawn advance",
@@ -25,8 +25,8 @@ failures += RunTest(
         Console.WriteLine(game.Board.ToString());
         return game.HandleTurn(new Coordinate(7, 3), new Coordinate(1, 3));
     },
-    (game, messages) => messages.Contains(ChessMessage.CHECK_BLACK),
-    expectedMessages: [ChessMessage.CHECK_BLACK]);
+    (game, messages) => messages.Contains(TurnResult.CHECK_BLACK),
+    expectedMessages: [TurnResult.CHECK_BLACK]);
 
 Console.WriteLine($"{(failures == 0 ? "All tests passed." : $"{failures} test(s) failed.")}");
 
@@ -34,7 +34,7 @@ static int RunTest(
     string name,
     Func<ChessGame, ChessMessages> execute,
     Func<ChessGame, ChessMessages, bool> assert,
-    IReadOnlyList<ChessMessage> expectedMessages)
+    IReadOnlyList<TurnResult> expectedMessages)
 {
     var game = new ChessGame();
     var messages = execute(game);
@@ -47,7 +47,7 @@ static int RunTest(
     return passed ? 0 : 1;
 }
 
-static string FormatMessages(IEnumerable<ChessMessage> messages)
+static string FormatMessages(IEnumerable<TurnResult> messages)
 {
     var list = messages.ToList();
     return list.Count == 0 ? "(no messages)" : string.Join(", ", list.Select(message => message.ToString()));

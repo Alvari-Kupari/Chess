@@ -3,12 +3,11 @@ using Chess.Move;
 
 namespace Chess.Pieces;
 
-class Pawn(Colour colour) : ChessPiece(colour)
+class Pawn(Colour colour) : TrackedPiece(colour)
 {
     protected override char WhiteSymbol => '♙';
 
     protected override char BlackSymbol => '♟';
-    private bool hasMoved = false;
 
     public override ISet<Coordinate> GetPossibleMoves(Coordinate source, ChessBoard board)
     {
@@ -21,7 +20,7 @@ class Pawn(Colour colour) : ChessPiece(colour)
             moves.Add(forwardSquare);
             var forwardTwoSquare = source + attackDirection * 2;
 
-            if (!board.IsOutsideBounds(forwardTwoSquare) && !hasMoved && !board.IsOccupied(forwardTwoSquare))
+            if (!board.IsOutsideBounds(forwardTwoSquare) && !HasMoved && !board.IsOccupied(forwardTwoSquare))
             {
                 moves.Add(forwardTwoSquare);
             }
@@ -41,10 +40,5 @@ class Pawn(Colour colour) : ChessPiece(colour)
         // TODO en paissant
 
         return moves;
-    }
-
-    public override void OnMove(Coordinate from, Coordinate to, ChessBoard board)
-    {
-        hasMoved = true;
     }
 }

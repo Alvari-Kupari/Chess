@@ -5,5 +5,5 @@ namespace Chess.Game.Actions;
 
 public interface IAction
 {
-    public abstract void Execute(ChessBoard board, Colour turn);
+    public abstract TurnResult Execute(ChessBoard board, Colour turn);
 }

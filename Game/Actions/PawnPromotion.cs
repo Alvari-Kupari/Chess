@@ -1,14 +1,16 @@
 using Chess.Board;
-using Chess.Pieces;
 using Chess.Game.Mechanics;
+using Chess.Pieces;
 
 namespace Chess.Game.Actions;
 
-public class MovePieceAction(Coordinate from, Coordinate to) : IAction
+public class PawnPromotionAction(Coordinate from, Coordinate to, ChessPiece newPiece) : IAction
 {
     public TurnResult Execute(ChessBoard board, Colour turn)
     {
+        if (newPiece is King or Pawn) return TurnResult.INVALID_MOVE;
         if (board.IsOutsideBounds(from) || board.IsOutsideBounds(to)) return TurnResult.INVALID_MOVE;
+        board[from] = newPiece;
         PieceMove move = new(from, to, board);
         if (move.FromPiece is null) return TurnResult.INVALID_MOVE;
 

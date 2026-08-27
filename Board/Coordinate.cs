@@ -1,4 +1,4 @@
-namespace Chess.Move;
+namespace Chess.Board;
 
 public record Coordinate(int X, int Y)
 {

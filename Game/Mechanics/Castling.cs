@@ -1,7 +1,6 @@
-using Chess.Move;
-using Chess.Pieces;
+using Chess.Board;
 
-namespace Chess.Game.Mechanics.Castling;
+namespace Chess.Game.Mechanics;
 
 public class CastlingPath
 {
