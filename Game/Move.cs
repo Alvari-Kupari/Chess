@@ -10,9 +10,10 @@ public class PieceMove : ChessTransaction
     public ChessPiece? ToPiece { get; }
     public ChessPiece? FromPiece {get; }
     private readonly bool hadPreviouslyMoved;
+    private readonly bool wasPreviouslyEnpassantEatable;
     private readonly ChessBoard board;
 
-    public PieceMove(Coordinate from, Coordinate to, ChessBoard board)
+    public PieceMove(Coordinate from, Coordinate to, ChessBoard board, ChessPiece? pawnPromoted = null)
     {
         From = from;
         To = to;
@@ -21,24 +22,45 @@ public class PieceMove : ChessTransaction
         ToPiece = board[to];
         FromPiece = board[from];
 
-        board[to] = board[from];
+        board[to] = pawnPromoted is null ? FromPiece : pawnPromoted;
         board[from] = null;
 
-        if (FromPiece is TrackedPiece trackedPiece)
+        if (FromPiece is CastleablePiece castleablePiece)
         {
-            hadPreviouslyMoved = trackedPiece.HasMoved;
-            trackedPiece.HasMoved = true;
+            hadPreviouslyMoved = castleablePiece.HasMoved;
+            castleablePiece.HasMoved = true;
         }
+
+        if (FromPiece is Pawn pawn)
+        {
+            hadPreviouslyMoved = pawn.HasMoved;
+            wasPreviouslyEnpassantEatable = pawn.EnPassantEatable;
+            pawn.HasMoved = true;
+
+            if (!hadPreviouslyMoved && Math.Abs(from.X - to.X) == 2)
+            {
+                pawn.EnPassantEatable = true;
+            } else
+            {
+                pawn.EnPassantEatable = false;
+            }
+        }
+
     }
 
     protected override void Rollback()
     {
-        board[From] = board[To];
+        board[From] = FromPiece;
         board[To] = ToPiece;
         
-        if (FromPiece is TrackedPiece trackedPiece)
+        if (FromPiece is CastleablePiece castleablePiece)
         {
-            trackedPiece.HasMoved = hadPreviouslyMoved;
+            castleablePiece.HasMoved = hadPreviouslyMoved;
+        }
+        if (FromPiece is Pawn pawn)
+        {
+            pawn.HasMoved = hadPreviouslyMoved;
+            pawn.EnPassantEatable = wasPreviouslyEnpassantEatable;
         }
     }
 }

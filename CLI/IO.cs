@@ -1,17 +1,14 @@
-using Chess.Move;
 
-namespace Chess.Game;
+using Chess.Board;
+
+namespace Chess.CLI;
 
 public class GameInputOutput
 {
-    public static Coordinate? GetUserInput(string? message = null)
+    public static string GetUserInput(string? message = null)
     {
         PrintMessage(message);
-        var input = Console.ReadLine();
-
-        if (input is null) return null;
-
-        return ParseCoordinate(input);
+        return Console.ReadLine() ?? "";
     }
 
     public static void PrintMessage(string? message = null)

@@ -6,7 +6,7 @@ using Chess.Pieces;
 
 class ChessGame
 {
-    private Colour turn;
+    public Colour Turn {get; private set;}
     public bool IsOver {get; private set;}
     public ChessBoard Board {get;}
     private readonly ChessBoardInitializer initializer = new();
@@ -15,16 +15,17 @@ class ChessGame
     public ChessGame()
     {
         Board = new(initializer);
-        turn = Colour.WHITE;
+        Turn = Colour.WHITE;
         IsOver = false;
     }
 
     public TurnResult HandleTurn(IAction action)
     {
-        var result = action.Execute(Board, turn);
+        var result = action.Execute(Board, Turn);
 
-        if (!result.IsError()) turn = turn.Opposite();
         if (result.IsGameOver()) IsOver = true;
+        if (!IsOver && !result.IsError()) Turn = Turn.Opposite();
+
         return result;
 
     }

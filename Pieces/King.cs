@@ -1,9 +1,8 @@
 using Chess.Board;
-using Chess.Move;
 
 namespace Chess.Pieces;
 
-public class King(Colour colour) : TrackedPiece(colour)
+public class King(Colour colour) : CastleablePiece(colour)
 {
     protected override char WhiteSymbol => '♔';
 

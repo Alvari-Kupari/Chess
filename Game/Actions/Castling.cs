@@ -22,7 +22,7 @@ public class CastlingAction(Colour side, bool queenside) : IAction
         
         Coordinate expectedRookLocation = new(
             X: queenside ? 0 : board.GetBoundary(0),
-            Y: side == Colour.WHITE ? board.GetBoundary(1) : 0
+            Y: side == Colour.BLACK ? 0 : board.GetBoundary(1)
         );
         
         if (board[expectedRookLocation] is not Rook rook || rook.HasMoved || rook.Colour != side)

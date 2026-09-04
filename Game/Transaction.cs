@@ -14,6 +14,7 @@ public abstract class ChessTransaction : IDisposable
     {
         if (completed) return;
         completed = true;
+        Rollback();
         GC.SuppressFinalize(this);
     }
 

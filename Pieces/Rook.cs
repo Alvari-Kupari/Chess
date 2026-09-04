@@ -1,9 +1,8 @@
 using Chess.Board;
-using Chess.Move;
 
 namespace Chess.Pieces;
 
-public class Rook(Colour colour) : TrackedPiece(colour)
+public class Rook(Colour colour) : CastleablePiece(colour)
 {
     protected override char WhiteSymbol => '♖';
 

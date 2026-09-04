@@ -3,8 +3,9 @@ namespace Chess.Board;
 public record Coordinate(int X, int Y)
 {
     public Coordinate(string algebraic) : this(
-        algebraic[0] - 'a',
-        8 - int.Parse(algebraic[1].ToString()))
+        8 - int.Parse(algebraic[1].ToString()),
+        algebraic[0] - 'a'
+    )
     {
     }
 

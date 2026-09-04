@@ -4,14 +4,18 @@ using Chess.Game.Mechanics;
 
 namespace Chess.Game.Actions;
 
-public class MovePieceAction(Coordinate from, Coordinate to) : IAction
+public class MovePieceAction(Coordinate from, Coordinate to, ChessPiece? pawnPromoted = null) : IAction
 {
     public TurnResult Execute(ChessBoard board, Colour turn)
     {
         if (board.IsOutsideBounds(from) || board.IsOutsideBounds(to)) return TurnResult.INVALID_MOVE;
-        PieceMove move = new(from, to, board);
-        if (move.FromPiece is null) return TurnResult.INVALID_MOVE;
+        if (pawnPromoted is King or Pawn) return TurnResult.INVALID_MOVE;
 
+        using PieceMove move = new(from, to, board, pawnPromoted);
+        var endFile = turn == Colour.BLACK ? 0 : board.GetBoundary(0); 
+        if (move.FromPiece is null) return TurnResult.INVALID_MOVE;
+        if (move.FromPiece is Pawn && to.X == endFile && pawnPromoted is null) return TurnResult.INVALID_MOVE;
+    
         var possibleMoves = move.FromPiece.GetPossibleMoves(from, board);
 
         if (!possibleMoves.Contains(to)) return TurnResult.INVALID_MOVE;
