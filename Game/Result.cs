@@ -6,7 +6,8 @@ public enum TurnResult
     NORMAL,
     CHECK,
     CHECKMATE,
-    STALEMATE
+    STALEMATE,
+    SURRENDER,
 }
 
 public static class MessageMeanings
