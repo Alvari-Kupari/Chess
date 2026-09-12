@@ -9,6 +9,9 @@ public record Coordinate(int X, int Y)
     {
     }
 
+    public char File {get => (char) (Y + 97);}
+    public int Rank {get => X;}
+
     public static Coordinate operator +(Coordinate a, Coordinate b)
     {
         return new Coordinate(a.X + b.X, a.Y + b.Y);

@@ -19,6 +19,29 @@ public class PGNMove
     
     public MovePieceAction GetAction(ChessBoard board)
     {
-        throw new NotSupportedException();
+        if (board[to] is not null && !isCapture)
+        {
+            throw new Exception("Piece capture contradiction");
+        }
+
+        Coordinate? from = null;
+        foreach (var (piece, location) in board)
+        {
+            if (
+                piece.GetType() == pieceType &&
+                (specifiedFile is null || specifiedFile == location.File) &&
+                (specifiedRank is null || specifiedRank == location.Rank)
+            )
+            {
+                from = location;
+            }
+
+            
+
+
+  
+        }
+
+        return new(from, to, null);
     }
 }

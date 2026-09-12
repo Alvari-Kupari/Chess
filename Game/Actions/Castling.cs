@@ -17,7 +17,7 @@ public class CastlingAction(Colour side, bool queenside) : IAction
 
         if (board[expectedKingLocation] is not King king || king.Colour != side || king.HasMoved)
         {
-            return TurnResult.INVALID_MOVE;
+            return TurnResult.ERROR_KING_UNCASTLEABLE;
         }
         
         Coordinate expectedRookLocation = new(
@@ -28,7 +28,7 @@ public class CastlingAction(Colour side, bool queenside) : IAction
         if (board[expectedRookLocation] is not Rook rook || rook.HasMoved || rook.Colour != side)
         {
             // handle
-            return TurnResult.INVALID_MOVE;
+            return TurnResult.ERROR_ROOK_UNCASTLEABLE;
         }
 
         CastlingPath path = new(expectedKingLocation, expectedRookLocation);
@@ -40,13 +40,13 @@ public class CastlingAction(Colour side, bool queenside) : IAction
         if (path.GetRequiredEmptySquares().Any(board.IsOccupied))
         {
             // TODO handle
-            return TurnResult.INVALID_MOVE;
+            return TurnResult.ERROR_CASTLING_PATH_BLOCKED;
         }
 
         if (path.GetKingsPath().Any(enemyCoveredSquares.Contains))
         {
             // handle
-            return TurnResult.INVALID_MOVE;
+            return TurnResult.ERROR_CASTLING_PATH_CHECKED;
         }
 
         // Do the castle

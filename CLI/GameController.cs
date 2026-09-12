@@ -20,7 +20,7 @@ class GameController
         {
             if (result.IsError())
             {
-                GameInputOutput.PrintMessage("ERROR - invalid move");
+                GameInputOutput.PrintMessage(result.ToString());
             }
             if (result == TurnResult.CHECK)
             {

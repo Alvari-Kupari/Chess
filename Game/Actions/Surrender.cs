@@ -9,5 +9,5 @@ public class SurrenderAction(Colour sideSurrendering) : IAction
     public TurnResult Execute(ChessBoard board, Colour turn)
     {
         return TurnResult.SURRENDER;
-    }
+    }   
 }
