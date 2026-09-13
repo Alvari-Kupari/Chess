@@ -25,14 +25,13 @@ public class MovePieceAction(Coordinate from, Coordinate to, ChessPiece? pawnPro
     
         var possibleMoves = move.FromPiece.GetPossibleMoves(from, board);
 
-        Console.WriteLine("From: " + move.FromPiece.Symbol);
-        Console.WriteLine("Possible moves:" + string.Join(", ", possibleMoves));
-
         if (!possibleMoves.Contains(to)) 
             return TurnResult.ERROR_PIECE_CANT_MOVE_THERE;
 
         if (move.ToPiece is not null && move.ToPiece.Colour == turn) 
             return TurnResult.ERROR_CANT_CAPTURE_OWN_COLOUR;
+
+        move.Execute();
 
         var (friendlyKing, friendlyKingLocation) = board.First(item => item.Item1 is King king && king.Colour == turn);
 

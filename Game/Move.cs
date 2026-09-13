@@ -9,6 +9,7 @@ public class PieceMove : ChessTransaction
     public Coordinate From { get; }
     public ChessPiece? ToPiece { get; }
     public ChessPiece? FromPiece {get; }
+    public ChessPiece? PawnPromoted {get; }
     private readonly bool hadPreviouslyMoved;
     private readonly bool wasPreviouslyEnpassantEatable;
     private readonly ChessBoard board;
@@ -21,31 +22,35 @@ public class PieceMove : ChessTransaction
 
         ToPiece = board[to];
         FromPiece = board[from];
-
-        board[to] = pawnPromoted is null ? FromPiece : pawnPromoted;
-        board[from] = null;
+        PawnPromoted = pawnPromoted;
 
         if (FromPiece is CastleablePiece castleablePiece)
         {
             hadPreviouslyMoved = castleablePiece.HasMoved;
-            castleablePiece.HasMoved = true;
         }
 
         if (FromPiece is Pawn pawn)
         {
             hadPreviouslyMoved = pawn.HasMoved;
             wasPreviouslyEnpassantEatable = pawn.EnPassantEatable;
-            pawn.HasMoved = true;
+        }
+    }
 
-            if (!hadPreviouslyMoved && Math.Abs(from.X - to.X) == 2)
-            {
-                pawn.EnPassantEatable = true;
-            } else
-            {
-                pawn.EnPassantEatable = false;
-            }
+    protected override void ExecuteTransaction()
+    {
+        board[To] = PawnPromoted is null ? FromPiece : PawnPromoted;
+        board[From] = null;
+
+        if (FromPiece is CastleablePiece castleablePiece)
+        {
+            castleablePiece.HasMoved = true;
         }
 
+        if (FromPiece is Pawn pawn)
+        {
+            pawn.HasMoved = true;
+            pawn.EnPassantEatable = !hadPreviouslyMoved && Math.Abs(From.X - To.X) == 2;
+        }
     }
 
     protected override void Rollback()

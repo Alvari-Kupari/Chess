@@ -20,10 +20,11 @@ public abstract class ChessPiece(Colour Colour)
     {
         var moves = new HashSet<Coordinate>();
 
-        foreach (var (dxy, maxIterations) in directions)
+        foreach (var (direction, maxIterations) in directions)
         {
             int i = 0;
-            var coord = start + dxy;
+            var coord = start + direction;
+
             while (i < maxIterations && !board.IsOutsideBounds(coord))
             {
                 if (board.IsOccupied(coord))
@@ -35,13 +36,12 @@ public abstract class ChessPiece(Colour Colour)
                     break;
                 }
                 moves.Add(coord);
-                coord += dxy;
+                coord += direction;
                 i++;
             }
         }
-
+        
         return moves;
-
     }
 
     public abstract ISet<Coordinate> GetPossibleMoves(Coordinate source, ChessBoard board); 
