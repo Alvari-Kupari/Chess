@@ -9,18 +9,15 @@ public class DetermineStatus
     {
         // now determine if its in check / checkmate for the OTHER team
         var (enemyKing, enemyKingLocation) = 
-            board.FirstOrDefault(item => item.Item1 is King king && king.Colour != turn);
+            board.First(item => item.Item1 is King king && king.Colour != turn);
 
         var friendlyCoveredSquares = moves.GetByColour(turn);
+        bool isCheck = friendlyCoveredSquares.Contains(enemyKingLocation);
 
         if (ValidMoves.HasValidMoves(board, moves, enemyKingLocation, turn.Opposite())) {
-            return TurnResult.NORMAL;
+            return isCheck ? TurnResult.CHECK : TurnResult.NORMAL;
         }
 
-        if (friendlyCoveredSquares.Contains(enemyKingLocation))
-        {
-            return TurnResult.CHECKMATE;
-        }
-        return TurnResult.STALEMATE;
+        return isCheck ? TurnResult.CHECKMATE : TurnResult.STALEMATE;
     }
 }

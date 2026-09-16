@@ -15,7 +15,7 @@ public class MovePieceAction(Coordinate from, Coordinate to, ChessPiece? pawnPro
             return TurnResult.ERROR_BAD_PROMOTION;
 
         using PieceMove move = new(from, to, board, pawnPromoted);
-        var endFile = turn == Colour.BLACK ? board.GetBoundary(0) : 0; 
+        var endFile = turn == Colour.BLACK ? board.XLength : 0; 
 
         if (move.FromPiece is null) 
             return TurnResult.ERROR_EMPTY_SOURCE;

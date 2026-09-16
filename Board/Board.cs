@@ -7,6 +7,8 @@ namespace Chess.Board;
 public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<(ChessPiece, Coordinate)>
 {
     private readonly ChessPiece?[,] board = initializer.InitBoard();
+    public int XLength {get => board.GetLength(0);}
+    public int YLength {get => board.GetLength(1);}
 
     public ChessPiece? this[Coordinate coord]
     {
@@ -22,14 +24,9 @@ public class ChessBoard(ChessBoardInitializer initializer) : IEnumerable<(ChessP
     {
         var (x, y) = coord;
         return x < 0 
-            || x >= board.GetLength(0) 
+            || x >= XLength 
             || y < 0 
-            || y >= board.GetLength(1);
-    }
-
-    public int GetBoundary(int axis)
-    {
-        return board.GetLength(axis);
+            || y >= YLength;
     }
 
     public Coordinate? FindPiece(ChessPiece needle) 

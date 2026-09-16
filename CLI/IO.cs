@@ -17,24 +17,6 @@ public class GameInputOutput
         Console.WriteLine(message);
     }
 
-    // public static void PrintBoard(ChessBoard board)
-    // {
-    //     StringBuilder sb = new();
-
-    //     for (int i = 0; i < board.GetBoundary(0); i++)
-    //     {
-    //         StringBuilder row = new();
-    //         for (int j = 0; j < board.GetBoundary(1); j++)
-    //         {
-    //             var piece = board[new Coordinate(i, j)];
-    //             row.Append(piece?.Symbol ?? ' ');
-    //         }
-    //         sb.Append(row);
-    //         sb.Append('\n');
-    //     }
-    //     PrintMessage(sb.ToString());
-    // }
-
     public static void PrintBoard(ChessBoard board)
     {
         var separator = "  +---+---+---+---+---+---+---+---+";
@@ -42,11 +24,11 @@ public class GameInputOutput
 
         sb.Append(separator);
 
-        for (int i = 0; i < board.GetBoundary(0); i++)
+        for (int i = 0; i < board.XLength; i++)
         {
-            StringBuilder row = new($"\n{board.GetBoundary(0) - i} |");
+            StringBuilder row = new($"\n{board.XLength - i} |");
 
-            for (int j = 0; j < board.GetBoundary(1); j++)
+            for (int j = 0; j < board.YLength; j++)
             {
                 char symbol = board[new Coordinate(i, j)]?.Symbol ?? ' ';
                 row.Append($" {symbol} |");

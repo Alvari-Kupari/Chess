@@ -17,6 +17,7 @@ public class ValidMoves
             {
                 // try the move
                 using PieceMove trialMove = new(pieceLocation, possibleMove, board);
+                trialMove.Execute();
                 MoveRegistry trialMoves = new(board);
                 var enemyCoveredSquares = trialMoves.GetByColour(turn.Opposite());
 

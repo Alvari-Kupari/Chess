@@ -6,13 +6,13 @@ namespace Chess.Game.Actions;
 
 public class CastlingAction(Colour side, bool queenside) : IAction
 {
-    private static readonly int KING_X = 3;
+    private static readonly int KING_Y = 4;
 
     public TurnResult Execute(ChessBoard board, Colour turn)
     {
         Coordinate expectedKingLocation = new(
-            X: KING_X,
-            Y: side == Colour.BLACK ? 0 : board.GetBoundary(1)
+            X: side == Colour.BLACK ? 0 : board.XLength - 1,
+            KING_Y
         );
 
         if (board[expectedKingLocation] is not King king || king.Colour != side || king.HasMoved)
@@ -21,8 +21,8 @@ public class CastlingAction(Colour side, bool queenside) : IAction
         }
         
         Coordinate expectedRookLocation = new(
-            X: queenside ? 0 : board.GetBoundary(0),
-            Y: side == Colour.BLACK ? 0 : board.GetBoundary(1)
+            X: side == Colour.BLACK ? 0 : board.XLength - 1,
+            Y: queenside ? 0 : board.YLength - 1
         );
         
         if (board[expectedRookLocation] is not Rook rook || rook.HasMoved || rook.Colour != side)
@@ -33,15 +33,13 @@ public class CastlingAction(Colour side, bool queenside) : IAction
 
         CastlingPath path = new(expectedKingLocation, expectedRookLocation);
 
-        MoveRegistry coveredSquares = new(board);
-
-        var enemyCoveredSquares = coveredSquares.GetByColour(turn.Opposite());
-
         if (path.GetRequiredEmptySquares().Any(board.IsOccupied))
         {
-            // TODO handle
             return TurnResult.ERROR_CASTLING_PATH_BLOCKED;
         }
+
+        MoveRegistry coveredSquares = new(board);
+        var enemyCoveredSquares = coveredSquares.GetByColour(turn.Opposite());
 
         if (path.GetKingsPath().Any(enemyCoveredSquares.Contains))
         {

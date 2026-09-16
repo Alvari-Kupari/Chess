@@ -40,9 +40,12 @@ class GameController
         if (result == TurnResult.STALEMATE)
         {
             GameInputOutput.PrintMessage("Stalemate!");
-        } else
+        } else if (result == TurnResult.CHECKMATE)
         {
             GameInputOutput.PrintMessage($"Checkmate! {game.Turn} wins!");
+        } else
+        {
+            throw new Exception("Unknown result: " + result);
         }
         GameInputOutput.PrintBoard(game.Board);
     }
