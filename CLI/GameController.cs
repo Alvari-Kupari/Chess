@@ -26,7 +26,7 @@ class GameController
             {
                 GameInputOutput.PrintMessage("Check!");
             }
-            Console.WriteLine(game.Board.ToString());
+            GameInputOutput.PrintBoard(game.Board);
             GameInputOutput.PrintMessage($"{(game.Turn == Colour.WHITE ? "Whites " : "Blacks")} turn:");
 
             var action = GetMove();
@@ -44,6 +44,7 @@ class GameController
         {
             GameInputOutput.PrintMessage($"Checkmate! {game.Turn} wins!");
         }
+        GameInputOutput.PrintBoard(game.Board);
     }
 
     private IAction? GetMove()

@@ -1,11 +1,10 @@
 # Chess
 
-A command-line chess game written in C# and .NET. The project models the board, pieces, legal moves, game state, castling, promotion, check, checkmate, and stalemate.
+A command-line chess game written in C# and .NET.
 
 ## Requirements
 
 - .NET 10 SDK
-- A terminal capable of reading interactive input
 
 Check the installed SDK with:
 
@@ -32,15 +31,16 @@ Start an interactive game with:
 dotnet run
 ```
 
-The game displays the board and prompts the current player for a move. Enter the source and destination squares separated by a space:
+### Making a Move
+Enter the source and destination squares separated by a space:
 
 ```text
 e2 e4
 ```
 
-Coordinates can be entered in algebraic form, such as `a3`, or geometric form, such as `0,1`. Input is case-insensitive.
+Coordinates must be entered in algebraic form, such as `a3`. Input is case-insensitive.
 
-### Commands
+### Other Commands
 
 ```text
 help                    Show the available commands
@@ -56,7 +56,7 @@ Pawn promotion is entered by adding the target piece after the destination squar
 a7 a8 queen
 ```
 
-Available promotion pieces are `queen`, `bishop`, `rook`, and `knight`.
+Available promotion pieces are `queen`, `bishop`, `rook`, and `knight` as per standard chess rules.
 
 ## Project Structure
 
@@ -68,15 +68,6 @@ Available promotion pieces are `queen`, `bishop`, `rook`, and `knight`.
 - `PGN/` - Portable Game Notation parsing support
 - `Main.cs` - Application entry point
 
-## Development
-
-Build the project after making changes:
-
-```bash
-dotnet build
-```
-
-The repository currently uses the executable entry point for manual play. Automated tests can be added as the rule engine and public game APIs continue to develop.
 
 ## Future Plans
 

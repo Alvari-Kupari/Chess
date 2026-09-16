@@ -1,4 +1,5 @@
 
+using System.Text;
 using Chess.Board;
 
 namespace Chess.CLI;
@@ -16,22 +17,45 @@ public class GameInputOutput
         Console.WriteLine(message);
     }
 
-    private static Coordinate? ParseCoordinate(string input)
+    // public static void PrintBoard(ChessBoard board)
+    // {
+    //     StringBuilder sb = new();
+
+    //     for (int i = 0; i < board.GetBoundary(0); i++)
+    //     {
+    //         StringBuilder row = new();
+    //         for (int j = 0; j < board.GetBoundary(1); j++)
+    //         {
+    //             var piece = board[new Coordinate(i, j)];
+    //             row.Append(piece?.Symbol ?? ' ');
+    //         }
+    //         sb.Append(row);
+    //         sb.Append('\n');
+    //     }
+    //     PrintMessage(sb.ToString());
+    // }
+
+    public static void PrintBoard(ChessBoard board)
     {
-        if (input.Trim().IsWhiteSpace())
+        var separator = "  +---+---+---+---+---+---+---+---+";
+        StringBuilder sb = new();
+
+        sb.Append(separator);
+
+        for (int i = 0; i < board.GetBoundary(0); i++)
         {
-            return null;
+            StringBuilder row = new($"\n{board.GetBoundary(0) - i} |");
+
+            for (int j = 0; j < board.GetBoundary(1); j++)
+            {
+                char symbol = board[new Coordinate(i, j)]?.Symbol ?? ' ';
+                row.Append($" {symbol} |");
+            }
+            row.Append($"\n{separator}");
+            sb.Append(row);
         }
-
-        var coords = input.Replace(" ", null).Split(",");
-        if (coords.Length != 2) return null;
-
-        if (!int.TryParse(coords[0], out int x) || !int.TryParse(coords[1], out int y))
-        {
-            return null;
-        }
-
-        return new Coordinate(x, y);
+        sb.Append("\n    a   b   c   d   e   f   g   h  ");
+        PrintMessage(sb.ToString());
     }
 
 
